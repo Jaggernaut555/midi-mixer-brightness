@@ -18,6 +18,7 @@ let refreshButton: ButtonType = new ButtonType("Refresh Monitors", {
 
 refreshButton.on("pressed", () => {
   ddcci._refresh();
+  refreshMonitorInfo();
   $MM.showNotification("Refreshed Brightness plugin monitor list");
 })
 
