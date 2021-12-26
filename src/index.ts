@@ -36,8 +36,6 @@ async function refreshMonitorInfo() {
       let name = `${info[1]} ${info[2]}`;
       let brightness = ddcci.getBrightness(mon);
 
-      console.log(`Initial brightness of ${name}: ${brightness}`);
-
       let m: monitorInfo = {
         Id: mon,
         Name: name,
@@ -63,13 +61,12 @@ async function refreshMonitorInfo() {
       monitors.set(m.Name, m);
     }
     catch (e) {
-      console.log(e);
+      log.error(e);
     }
   }
   
   $MM.setSettingsStatus("brightnessStatus", `${monitors.size} monitor(s) detected`);
   
-  console.log(monitors);
 
   createMainControl()
 }
