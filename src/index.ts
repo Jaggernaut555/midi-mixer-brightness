@@ -7,7 +7,7 @@ interface monitorInfo {
   Name: string;
   InitialBrightness: number;
   Assignment: Assignment;
-}
+};
 
 let monitors = new Map<string, monitorInfo>()
 let mainControl: monitorInfo;
@@ -20,7 +20,7 @@ refreshButton.on("pressed", () => {
   ddcci._refresh();
   refreshMonitorInfo();
   $MM.showNotification("Refreshed Brightness plugin monitor list");
-})
+});
 
 async function refreshMonitorInfo() {
   monitors.clear();
@@ -31,6 +31,7 @@ async function refreshMonitorInfo() {
   
       let info = mon.match("\#(.+?)\#.+\&(.+?)\#");
       if (info === null) {
+        log.info(`${info} was not in the expected format`);
         continue;
       }
   
@@ -52,12 +53,12 @@ async function refreshMonitorInfo() {
         let lev = Math.round(level*100);
         ddcci.setBrightness(m.Id, lev);
         m.Assignment.volume = level;
-      })
+      });
 
       m.Assignment.on("mutePressed", () => {
         // Reset back to initial/default brightness
         m.Assignment.emit("volumeChanged", (m.InitialBrightness / 100))
-      })
+      });
   
       monitors.set(m.Name, m);
     }
@@ -68,8 +69,7 @@ async function refreshMonitorInfo() {
   
   $MM.setSettingsStatus("brightnessStatus", `${monitors.size} monitor(s) detected`);
   
-
-  createMainControl()
+  createMainControl();
 }
 
 async function createMainControl() {
@@ -83,7 +83,7 @@ async function createMainControl() {
   // - user can set their preferences for each monitor there
   let sum = 0;
   for(const m of monitors) {
-    sum += m[1].Assignment.volume * 100
+    sum += m[1].Assignment.volume;
   }
   let avg = sum / monitors.size;
 
@@ -93,9 +93,9 @@ async function createMainControl() {
     Assignment: new Assignment("Main Control", {
       name: "Main Control",
       muted: true,
-      volume: avg / 100,
+      volume: avg,
     }),
-    InitialBrightness: avg,
+    InitialBrightness: avg * 100,
   };
 
   mainControl.Assignment.on("volumeChanged", (level:number) => {
@@ -103,16 +103,14 @@ async function createMainControl() {
     monitors.forEach((v,k) => {
       v.Assignment.emit("volumeChanged", level);
     });
-  })
+  });
 
   mainControl.Assignment.on("mutePressed", () => {
-    mainControl.Assignment.volume = mainControl.InitialBrightness;
+    mainControl.Assignment.volume = mainControl.InitialBrightness / 100;
     monitors.forEach((v,k) => {
       v.Assignment.emit("mutePressed");
     })
-  })
+  });
 }
 
-
 refreshMonitorInfo();
-
