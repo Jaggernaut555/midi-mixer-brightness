@@ -1,6 +1,8 @@
 # Midi Mixer brightness plugin
 
-Control the brightness of your monitors with Midi Mixer groups
+Control the brightness of your monitors with Midi Mixer groups.
+
+Monitors MUST support ddc/ci to be controlled by this plugin.
 
 Features:
 - An assignment for each monitor
