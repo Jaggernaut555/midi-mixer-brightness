@@ -1,0 +1,47 @@
+{
+  "name": "ca.jaggernaut.midi-mixer.brightness",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A monitor brightness plugin for MIDI Mixer.",
+  "files": [
+    "sun.svg",
+    "PAGE.md",
+    "plugin.json",
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "semantic-release": "semantic-release",
+    "postversion": "npx ts-node scripts/bump-manifest.ts && midi-mixer pack",
+    "pack": "midi-mixer pack"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@types/node": "^15.12.1",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "midi-mixer-cli": "^1.0.1",
+    "prettier": "^2.2.1",
+    "semantic-release": "^17.4.3",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@hensm/ddcci": "^0.1.0",
+    "midi-mixer-plugin": "^0.4.0"
+  },
+  "bundledDependencies": [
+    "midi-mixer-plugin",
+    "@hensm/ddcci"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jaggernaut555/midi-mixer-brightness.git"
+  }
+}

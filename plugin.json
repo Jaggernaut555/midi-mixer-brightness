@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/midi-mixer-plugin/plugin.schema.json",
+  "version": "1.0.0",
+  "id": "ca.jaggernaut.midi-mixer.brightness",
+  "name": "Brightness",
+  "main": "lib/index.js",
+  "type": "node",
+  "icon": "sun.svg",
+  "settings": {
+    "brightnessStatus": {
+      "label": "Brightness Status",
+      "type": "status",
+      "fallback": "Not active"
+    }
+  },
+  "author": "Jaggernaut"
+}
