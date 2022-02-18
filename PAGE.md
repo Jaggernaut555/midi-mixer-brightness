@@ -2,7 +2,7 @@
 
 Control the brightness of your monitors with Midi Mixer groups.
 
-Monitors MUST support ddc/ci to be controlled by this plugin.
+Monitors not supported by ddc/ci may be able to be controlled by the assignments with `WMI` in the name.
 
 Features:
 - An assignment for each monitor
