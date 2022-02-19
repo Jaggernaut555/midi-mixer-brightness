@@ -142,19 +142,21 @@ async function parseWMIGet(res: string) {
     console.log("Not enough lines");
     return null;
   }
+
   // remove the first result
   lines.shift();
 
   lines.forEach((val) => {
-    let sr = val.split(/\s+/);
+    let sr = val.trim().split(/\s+/);
     if (sr.length !== 2) {
       console.log("Not valid wmi monitor values");
       return;
     }
 
-    let info = sr[1].match("\#(.+?)\#.+\&(.+?)\#");
+    let info = sr[1].match(/\\(.+?)\\.+\&(.+?)_0/);
     if (info === null) {
       log.info(`${info} was not in the expected format`);
+      console.log(`${info} was not in the expected format`)
       return;
     }
     let name = `${info[1]} ${info[2]} WMI`;
