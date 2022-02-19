@@ -122,7 +122,7 @@ async function createMainControl() {
 */
 
 async function refreshWmiMonitorInfo() {
-  const cmd = "wmic /namespace:\\\\root\\WMI wmimonitorbrightness get currentbrightness,instancename";
+  const cmd = "wmic /NAMESPACE:\\\\root\\WMI PATH wmimonitorbrightness GET currentbrightness,instancename";
   exec(cmd, (err, stdout, stderr) => {
     if (err) {
       console.log(err);
