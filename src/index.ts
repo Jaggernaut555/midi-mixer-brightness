@@ -139,9 +139,9 @@ async function createMainControl() {
 async function refreshWmiMonitorInfo() {
   let cmd = `(Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightness -Property InstanceName,Active,CurrentBrightness) | ConvertTo-Json`
 
-  let r = await ps.invoke(cmd);
+  try {
+    let r = await ps.invoke(cmd);
 
-  if (!r.hadErrors) {
     let s = r.stdout?.toString() ?? "{}";
     let mons: PsMonitor[] = JSON.parse(s);
     for(let mon of mons) {
@@ -163,6 +163,11 @@ async function refreshWmiMonitorInfo() {
       }
     }
   }
+  catch (err) {
+    // Err here likely caused by unsupported WMI platform. Fine to ignore
+    console.log(err);
+  }
+
 }
 
 async function setWMIBrightness(id: string, level: number) {
@@ -171,10 +176,12 @@ async function setWMIBrightness(id: string, level: number) {
   let escapedId = id.replace(/\\/g, '\\\\')
 
   const cmd = `(Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods -Filter "InstanceName='${escapedId}'").WmiSetBrightness(0, ${lev})`
-  let r = await ps.invoke(cmd);
 
-  if (r.hadErrors) {
-    let err = r.stderr?.toString() ?? "";
+  try {
+    await ps.invoke(cmd);
+    // On success no important return value
+  }
+  catch(err) {
     log.error(err)
     console.log(err);
     $MM.showNotification("Error changing WMI brightness");
