@@ -54,7 +54,7 @@ export async function refreshOneMonitor(monitors: Map<string, MonitorInfo>, name
         found = await refreshDdcciMonitorInfo(monitors, name);
     }
     else if (protocol === "WMI") {
-        console.log("Not implemented yet");
+        found = await refreshWmiMonitorInfo(monitors, name);
     }
 
     if (!found) {

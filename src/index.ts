@@ -21,5 +21,4 @@ async function init() {
   $MM.setSettingsStatus("brightnessStatus", `${monitors.size} monitor(s) detected`);
 }
 
-
 init();
