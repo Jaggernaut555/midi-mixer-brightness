@@ -7,9 +7,6 @@ Monitors not supported by ddc/ci may be able to be controlled by the assignments
 Features:
 - An assignment for each monitor
     - The mute button will reset brightness back to what it was when the plugin was loaded
-- "Main Control" for modifying brightness of every monitor at once
-    - Be aware using this or using Midi Mixer multi-assignment may take a second to change the brightness. This is a limitation of this plugin
-    - Possible future feature: Set an offset for each monitor (e.g. monitor [X] will be some % more/less bright than monitor [Y])
 - A button to refresh the list of available monitors
     - Detect any newly plugged in or removed monitors
     - This will reset the mute-button-brightness value

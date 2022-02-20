@@ -10,3 +10,4 @@ To install without compiling from source, download the [.midiMixerPlugin from th
 This package uses:
 - [midi-mixer-plugin](https://github.com/midi-mixer/midi-mixer-plugin)
 - [node-ddcci](https://github.com/hensm/node-ddcci)
+- [node-powershell](https://github.com/rannn505/child-shell/tree/master/packages/node-powershell#readme)

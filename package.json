@@ -1,6 +1,6 @@
 {
   "name": "ca.jaggernaut.midi-mixer.brightness",
-  "version": "1.1.0-alpha.3",
+  "version": "1.1.0-alpha.4",
   "private": true,
   "description": "A monitor brightness plugin for MIDI Mixer.",
   "files": [
@@ -35,11 +35,13 @@
   },
   "dependencies": {
     "@hensm/ddcci": "^0.1.0",
-    "midi-mixer-plugin": "^0.4.0"
+    "midi-mixer-plugin": "^0.4.0",
+    "node-powershell": "^5.0.1"
   },
   "bundledDependencies": [
     "midi-mixer-plugin",
-    "@hensm/ddcci"
+    "@hensm/ddcci",
+    "node-powershell"
   ],
   "repository": {
     "type": "git",
