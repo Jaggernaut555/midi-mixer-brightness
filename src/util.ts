@@ -12,10 +12,11 @@ export interface MonitorInfo {
     protocol: Protocol;
 };
 
-export function refreshMonitors(monitors: Map<string, MonitorInfo>) {
+export async function refreshMonitors(monitors: Map<string, MonitorInfo>) {
     monitors.clear();
-    refreshDdcciMonitorInfo(monitors);
-    refreshWmiMonitorInfo(monitors);
+    await refreshDdcciMonitorInfo(monitors);
+    await refreshWmiMonitorInfo(monitors);
+    $MM.setSettingsStatus("brightnessStatus", `${monitors.size} monitor(s) detected`);
     $MM.showNotification("Refreshed Brightness plugin monitor list");
 }
 

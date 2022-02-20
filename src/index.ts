@@ -12,13 +12,10 @@ let refreshButton: ButtonType = new ButtonType("Refresh Monitors", {
 
 refreshButton.on("pressed", () => {
   refreshMonitors(monitors);
-  $MM.setSettingsStatus("brightnessStatus", `${monitors.size} monitor(s) detected`);
 });
 
 async function init() {
-  await refreshDdcciMonitorInfo(monitors);
-  await refreshWmiMonitorInfo(monitors);
-  $MM.setSettingsStatus("brightnessStatus", `${monitors.size} monitor(s) detected`);
+  refreshMonitors(monitors);
 }
 
 init();
