@@ -10,13 +10,18 @@ export async function refreshDdcciMonitorInfo(monitors: Map<string, MonitorInfo>
     let refreshed = false;
 
     ddcci._refresh();
-    for (const rawmon of ddcci.getMonitorList()) {
+
+    let monitorList = ddcci.getMonitorList();
+    console.log("DDC/CI monitors:", monitorList);
+
+    for (const rawmon of monitorList) {
         try {
             let mon: string = rawmon
 
             let info = mon.match("\#(.+?)\#.+\&(.+?)\#");
             if (info === null) {
-                log.info(`${info} was not in the expected format`);
+                log.info(`${mon} was not in the expected format`);
+                console.log(`${mon} was not in the expected format`);
                 continue;
             }
 
@@ -51,7 +56,8 @@ export async function refreshDdcciMonitorInfo(monitors: Map<string, MonitorInfo>
             });
         }
         catch (e) {
-            log.error(e);
+            log.error(`Error in DDC/CI refresh with monitor ${rawmon}`, e);
+            console.log(`Error in DDC/CI refresh with monitor ${rawmon}`, e);
         }
     }
 

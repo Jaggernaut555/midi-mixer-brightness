@@ -34,11 +34,11 @@ export async function refreshWmiMonitorInfo(monitors: Map<string, MonitorInfo>, 
 
         for (let mon of mons) {
             if (mon.Active) {
-
                 let info = mon.InstanceName.match(/\\(.+?)\\.+\&(.+?)_0/);
 
                 if (info === null) {
-                    log.info(`${info} was not in the expected format`);
+                    log.info(`${mon} was not in the expected format`);
+                    console.log(`${mon} was not in the expected format`);
                     continue;
                 }
 
