@@ -1,68 +1,90 @@
 import { Assignment } from "midi-mixer-plugin";
-import { getDDCCI, refreshDdcciMonitorInfo } from "./ddcci";
+import { getDDCCI, refreshDdcciMonitorInfo, toggleMonitorState } from "./ddcci";
 import { refreshWmiMonitorInfo } from "./wmi";
 
 export type Protocol = "DDCCI" | "WMI";
 
 export interface MonitorInfo {
-    Id: string;
-    Name: string;
-    InitialBrightness: number;
-    Assignment: Assignment;
-    protocol: Protocol;
-};
-
-export async function refreshMonitors(monitors: Map<string, MonitorInfo>) {
-    monitors.clear();
-    await refreshDdcciMonitorInfo(monitors);
-    await refreshWmiMonitorInfo(monitors);
-    $MM.setSettingsStatus("brightnessStatus", `${monitors.size} monitor(s) detected`);
-    $MM.showNotification("Refreshed Brightness plugin monitor list");
+  Id: string;
+  Name: string;
+  InitialBrightness: number;
+  Assignment: Assignment;
+  protocol: Protocol;
 }
 
-export function createMonitorAssignment(monitors: Map<string, MonitorInfo>, id: string, name: string, initial: number, protocol: Protocol, volumeCallback: (level: number) => void, throttle: number = 50) {
-    let m: MonitorInfo = {
-        Id: id,
-        Name: name,
-        Assignment: new Assignment(`Brightness ${name}`, {
-            name: name,
-            muted: true, // light up the mute button
-            volume: initial / 100,
-            throttle: throttle,
-            assigned: true,
-        }),
-        InitialBrightness: initial,
-        protocol
-    };
+export async function refreshMonitors(
+  monitors: Map<string, MonitorInfo>
+): Promise<void> {
+  monitors.clear();
+  await refreshDdcciMonitorInfo(monitors);
+  await refreshWmiMonitorInfo(monitors);
+  $MM.setSettingsStatus(
+    "brightnessStatus",
+    `${monitors.size} monitor(s) detected`
+  );
+  $MM.showNotification("Refreshed Brightness plugin monitor list");
+}
 
-    m.Assignment.on("volumeChanged", (level: number) => {
-        volumeCallback(level);
-        m.Assignment.volume = level;
+export function createMonitorAssignment(
+  monitors: Map<string, MonitorInfo>,
+  id: string,
+  name: string,
+  initial: number,
+  protocol: Protocol,
+  volumeCallback: (level: number) => void,
+  throttle = 50
+): void {
+  const m: MonitorInfo = {
+    Id: id,
+    Name: name,
+    Assignment: new Assignment(`Brightness ${name}`, {
+      name: name,
+      muted: true, // light up the mute button
+      volume: initial / 100,
+      throttle: throttle,
+      assigned: true,
+      running: true,
+    }),
+    InitialBrightness: initial,
+    protocol,
+  };
+
+  m.Assignment.on("volumeChanged", (level: number) => {
+    volumeCallback(level);
+    m.Assignment.volume = level;
+  });
+
+  m.Assignment.on("mutePressed", () => {
+    // Reset back to initial/default brightness
+    m.Assignment.emit("volumeChanged", m.InitialBrightness / 100);
+  });
+
+  if (protocol == "DDCCI") {
+    m.Assignment.on("runPressed", () => {
+      toggleMonitorState(m);
     });
+  }
 
-    m.Assignment.on("mutePressed", () => {
-        // Reset back to initial/default brightness
-        m.Assignment.emit("volumeChanged", (m.InitialBrightness / 100))
-    });
-
-    monitors.set(m.Name, m);
+  monitors.set(m.Name, m);
 }
 
-export async function refreshOneMonitor(monitors: Map<string, MonitorInfo>, name: string, protocol: Protocol) {
-    let found = false;
+export async function refreshOneMonitor(
+  monitors: Map<string, MonitorInfo>,
+  name: string,
+  protocol: Protocol
+): Promise<void> {
+  let found = false;
 
-    if (protocol === "DDCCI") {
-        found = await refreshDdcciMonitorInfo(monitors, name);
-    }
-    else if (protocol === "WMI") {
-        found = await refreshWmiMonitorInfo(monitors, name);
-    }
+  if (protocol === "DDCCI") {
+    found = await refreshDdcciMonitorInfo(monitors, name);
+  } else if (protocol === "WMI") {
+    found = await refreshWmiMonitorInfo(monitors, name);
+  }
 
-    if (!found) {
-        console.log("Could not refresh monitor");
-    }
+  if (!found) {
+    console.log("Could not refresh monitor");
+  }
 }
-
 
 // Until any of thee below features are implemented this is not useful.
 /*
