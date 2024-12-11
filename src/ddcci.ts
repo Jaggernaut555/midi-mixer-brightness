@@ -70,12 +70,16 @@ export async function refreshDdcciMonitorInfo(monitors: Map<string, MonitorInfo>
 }
 
 export function toggleMonitorState(info: MonitorInfo): void {
-  // vcp code d6 is POWER_MODE
-  const state = ddcci._getVCP(info.Id, 0xd6); // [currentvalue, maxvalue]
-  // state[0] being 1 is on
-  // writing 5 to this vcp code is a write-only value to turn the monitor off
-  if (state) {
-    if (state[0] == 1) ddcci._setVCP(info.Id, 0xd6, 5);
-    else ddcci._setVCP(info.Id, 0xd6, 1);
+  try {
+    // vcp code d6 is POWER_MODE
+    const state = ddcci._getVCP(info.Id, 0xd6); // [currentvalue, maxvalue]
+    // state[0] being 1 is on
+    // writing 5 to this vcp code is a write-only value to turn the monitor off
+    if (state) {
+      if (state[0] == 1) ddcci._setVCP(info.Id, 0xd6, 5);
+      else ddcci._setVCP(info.Id, 0xd6, 1);
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
